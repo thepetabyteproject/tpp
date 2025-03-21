@@ -27,6 +27,7 @@ import your
 from your import Your
 import subprocess
 import os
+from re import search as regexSearch
 from tpp.infrastructure import database as db
 from your.utils.misc import YourArgparseFormatter
 from timeit import default_timer as timer
@@ -176,7 +177,7 @@ def do_candcsvmaker(your_fil_object):
     pattern = r".*\.cand$"
     cand_file_list = []
     for filename in os.listdir("./"):
-        if re.search(pattern,filename):
+        if regexSearch(pattern,filename):
             cand_file_list.append(filename)
     
     # The threshold values below are set to let heimdall, your, and fetch control what gets through.
@@ -416,7 +417,7 @@ if __name__ == "__main__":
         
     your_fil_object=Your(your_files.your_header.basename+"_converted.fil")
 
-"""
+    """
     #TPPDB RFI database functionality!
     # Report level of zapping
     if (n_zapped == 0):
@@ -433,7 +434,7 @@ if __name__ == "__main__":
             db.patch("processing_outcomes",outcomeID,data=data)
         except:
             print_dberr()
-"""
+    """
 
     logger.debug('Writer done, moving on')
 
@@ -781,7 +782,7 @@ logger.warning("Low frequency (< 1 GHz) data. Preparing to run DDplan.py....\n")
             db.patch("processing_outcomes",outcomeID,data=data)
 
 
-            # Tests:
+            # !H!H This is a big thing we need to test.
             #    - are misordered dict entries ok?
             #    - do the datas look right and post fine?
             #    - can I post multiple results in one post?
