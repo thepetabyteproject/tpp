@@ -37,7 +37,7 @@ import traceback
 import csv
 
 """
-
+<
 
 TPPDB in case of DB communication issue, Bikash recommends writing the
 desired "push" dictionaries to a file (and maybe transferring it to
@@ -54,7 +54,7 @@ static end location for that kind of thing.
 
 def check_space():
     """ !H!H!H IMPORTANT NEED TO CHECK THERE's ENOUGH SPACE TO HOUSE 3X THE MAIN FILE SIZE. """
-    TPPDB
+    #TPPDB
     
 def print_dberr():
     logger.error("*****DB COMMUNICATIONS ERROR, could not push to database.*****")
@@ -101,6 +101,13 @@ def do_RFI_filter(filenames,basename):
     logger.debug('WRITER/RFI FILTER: command = ' + writer_cmd)
     subprocess.call(writer_cmd,shell=True)
     writer_end=timer()
+
+
+    # Make sure the file exits, throw exception if not.
+    out_file = basename+"_converted.fil"
+    if not os.path.isfile(out_file):
+        errorstring = out_file+" file does not exist"
+        raise FileNotFoundError(errorstring)
     
     logger.debug('WRITER/RFI FILTER: your_writer.py took '+str(writer_end-writer_start)+' s')
 
@@ -109,7 +116,7 @@ def do_RFI_filter(filenames,basename):
     # did not end up working because the later codes had trouble
     # understanding the mask file.
     writer_cmd="your_rfimask.py -v -f "+str(filenames)+" -sk_sigma 4 -sg_sigma 4 -sg_frequency 15"
-    writer_basename=str(basename)+'_!Hyour_rfi_mask'
+    writer_basename=str(basename)+'_your_rfi_mask'
     killmask_file= f"{writer_basename}.bad_chans"
     with open(killmask_file,'r') as myfile:
     	file_str = myfile.read()
@@ -128,7 +135,6 @@ def do_RFI_filter(filenames,basename):
     return len(my_list)
     """
     return
-
 
 
 def do_heimdall(your_fil_object):
@@ -834,3 +840,4 @@ logger.warning("Low frequency (< 1 GHz) data. Preparing to run DDplan.py....\n")
     # Joe's thing: /tingle/data/results/survey/MJDint/####/(hd5 or png)
 
     #TPPDB CHECK: read results document and double check everything exists and is populated.
+    #TPPDB: for the instances of db_err(), write any status points to a temporary file sought by error-scanner cron job.
