@@ -1,6 +1,6 @@
 import globus_sdk as globus
 
-def manage_single_transfer(transfer_client, src, dest, src_location, dest_location):
+def manage_single_transfer(transfer_client, src, dest, src_location, dest_location, regex_filename=None):
     # Initiate Transfer using TransferClient
     task_data = globus.TransferData(transfer_client,
                                     src,
@@ -8,6 +8,9 @@ def manage_single_transfer(transfer_client, src, dest, src_location, dest_locati
                                     label="TPPtransfer_"+str(src),
                                     sync_level="checksum")
     task_data.add_item(src_location, dest_location)
+    if regex_filename != None:
+        task_data.add_filter_rule(regex_filename, method="include", type="file")
+        task_data.add_filter_rule("*", method="exclude", type="file")
     task_session = transfer_client.submit_transfer(task_data)
     task_id = task_session["task_id"]
     print(f"Submitted Transfer under Transfer ID: {task_id}")
